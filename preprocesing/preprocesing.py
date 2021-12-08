@@ -37,13 +37,13 @@ if Fs == 44100: #works only if targetFrequency is 16000
         bufferData.append((  filteredData[i] +   filteredData[i+1])/2)
         bufferData.append((1*filteredData[i] + 3*filteredData[i+1])/4)
         ###
-    print('bufferData: = ', len(bufferData))
+#    print('bufferData: = ', len(bufferData))
     resampledData = [0]
     for i in range(0,len(bufferData),step):
         resampledData.append(bufferData[i])
-    print('resampledData: = ', len(resampledData))
+#    print('resampledData: = ', len(resampledData))
     resampledData.pop(0)
-    print('resampledData: = ', len(resampledData))
+#    print('resampledData: = ', len(resampledData))
 
 else: #works if Fs is multiple of 48000
     step = Fs/targetFrequency
