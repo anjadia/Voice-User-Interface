@@ -1,0 +1,21 @@
+asr:
+  n_mfcc : 64
+  n_fft : 2048
+  hop_length : 0.01
+  win_length : 0.02
+  window : "hann"
+  center : True
+  pad_mode : "reflect"
+  dct_type : 2
+  norm : "ortho"
+
+preprocessing:
+  resampling :  
+    filterOrder : 120
+    window : "hamming"
+    targetFrequency : 16000
+  VAD: 
+    f_min : 50
+    f_max : 8000
+    frame_len : 0.1
+    threshold : 0.2

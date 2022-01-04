@@ -1,49 +1,49 @@
+`pip install -r requirements.txt`
+
 # Voice-User-Interface
 Voice-User Interface
 
 ```
 ~/VOI/Voice-User-Interface ❯ tree
 ├── asr
-│   ├── asr.py
-│   ├── __init__.py
-│   ├── README.md
-│   ├── test
-│   ├── tools
-│   │   └── __init__.py
-│   └── train
+│   ├── asr.py
+│   ├── __init__.py
+│   ├── README.md
+│   └── tools
+│       └── __init__.py
+├── config.yaml
+├── preprocesing
+│   ├── preprocesing.py
+│   └── test.wav
 ├── README.md
 ├── requirements.txt
 ├── tts
-│   ├── __init__.py
-│   ├── README.md
-│   ├── test
-│   ├── tools
-│   │   └── __init__.py
-│   ├── train
-│   └── tts.py
+│   ├── __init__.py
+│   ├── README.md
+│   ├── tools
+│   │   └── __init__.py
+│   └── tts.py
 └── voice_user_interface
-    ├── run.py
-    └── tools
+    └── run.py
 ```
 
 # TODO
 
-- resampling 
-- normalizer 
+- resampling DONE
+- normalizer DONE
 
 ## ASR:
 
 `in <repo_root>/asr`
 
 - MFCC 
-- train xvector 
-- train/valid set
+- train GMM
 
 ## TTS: 
 
 `in <repo_root>/tts`
 
-- diphones? 
+- LCP
 
 ## Interface
 
