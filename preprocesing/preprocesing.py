@@ -1,4 +1,5 @@
 import numpy as np
+import math
 from pathlib import Path
 from scipy.io import wavfile
 from ruamel.yaml import YAML
@@ -24,7 +25,7 @@ def createLPF(fs, Fcut, n, winName):
     return LPF * win
 
 
-def resample(signal, fs, config_file):
+def resample(signal, originalFrequency, config_file):
 
 
     filterOrder = config_file["filterOrder"] if "filterOrder" in config_file.keys() else 120
@@ -37,38 +38,33 @@ def resample(signal, fs, config_file):
     if signal.ndim == 2:
         signal = signal[:,0]
 
-    ############## downsampling ##############
+    ############## resampling ##############
     ##filtering
-    filter = createLPF(fs, Fcut, filterOrder, window)
-    filteredData = np.convolve(signal, filter)
+    filter = createLPF(originalFrequency, Fcut, filterOrder, window)
+    filteredSignal = np.convolve(signal, filter)
 
-    ##decimation 44100*4/11 ~= 16036 --//-- 48000/3 = 16000
-    if fs == 44100: #works only if targetFrequency is 16000
-        step = 11
-        bufferData = [0]
-        for i in range(len(filteredData[:-1])): #without last sample
-            bufferData.append(filteredData[i])
+    #delta - step (index) with which original samples are taken. Notice that 'delta' is NOT an integer
+    delta = originalFrequency/targetFrequency
+    #prealocating array for output signal
+    resampledSignal = np.zeros(math.ceil(len(filteredSignal)*(1/delta)))
 
-            bufferData.append((3*filteredData[i] + 1*filteredData[i+1])/4)
-            bufferData.append((  filteredData[i] +   filteredData[i+1])/2)
-            bufferData.append((1*filteredData[i] + 3*filteredData[i+1])/4)
+    sIdx = 0.0 #original signal's index
+    rsIdx = 0  #resampled signal's index
 
-        resampledData = [0]
-        for i in range(0,len(bufferData),step):
-            resampledData.append(bufferData[i])
+    while sIdx < len(filteredSignal):
+        intPart = int(sIdx)         #take integer part of index
+        fracPart = sIdx - intPart   #calculate fractional part of index
 
-        resampledData.pop(0)
+        #linear interpolation
+        if intPart + 1 < len(filteredSignal):#simple check for out-of-bound
+            resampledSignal[rsIdx] = filteredSignal[intPart]*(1 - fracPart) + filteredSignal[intPart + 1]*fracPart
+        else:
+            resampledSignal[rsIdx] = filteredSignal[-1]
+        sIdx += delta   #increasing index by 'delta' every loop
+        rsIdx += 1
 
-    else: #works if fs is multiple of 48000
-        print(fs)
-        step = int(fs/targetFrequency)
-        resampledData = [0]
-        for i in range(0,len(filteredData),step):
-            resampledData.append(filteredData[i])
-        resampledData.pop(0)
-
-    return resampledData, targetFrequency
-    ##'resampledData' is filtered and downsampled to 16kHz
+    return resampledSignal, targetFrequency
+    ##'resampledData' is filtered and downsampled to target frequency kHz
 
 
 def zero_cross(frame, fs, f_min = 50, f_max = 8000, threshold = 0.2):
