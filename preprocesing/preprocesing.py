@@ -4,6 +4,8 @@ from pathlib import Path
 from scipy.io import wavfile
 from ruamel.yaml import YAML
 
+###TODO powrzucac te wszystkie funkcje do klasy Preprocessor wg szablonu z asr/tools/preproseccing.py -anjadia
+
 def createLPF(fs, Fcut, n, winName):
     #function creates a n-th order low-pass FIR filter with winName window
     #fs - sampling frequency, Fcut - cut-off frequency

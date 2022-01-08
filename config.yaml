@@ -1,13 +1,12 @@
 asr:
-  n_mfcc : 64
-  n_fft : 2048
-  hop_length : 0.01
-  win_length : 0.02
-  window : "hann"
-  center : True
-  pad_mode : "reflect"
-  dct_type : 2
-  norm : "ortho"
+  MFCC: 
+    frame_len : 0.04
+    hop_len : 0.01
+    FFT_size : 1024
+    window : "hann"
+    n_mfcc : 30
+    dct_type : 2
+    dct_norm : "ortho"
 
 preprocessing:
   resampling :  
