@@ -18,3 +18,9 @@ preprocessing:
     f_max : 8000
     frame_len : 0.1
     threshold : 0.2
+
+tts:
+  tools:
+    frameLen : 0.02 # in seconds
+    frameOverlap : 0.5 # [0;1)
+    Threshold : 0.35
