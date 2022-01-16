@@ -48,7 +48,7 @@ def resample(signal, originalFrequency, config_file):
     #delta - step (index) with which original samples are taken. Notice that 'delta' is NOT an integer
     delta = originalFrequency/targetFrequency
     #prealocating array for output signal
-    resampledSignal = np.zeros(math.ceil(len(filteredSignal)*(1/delta)))
+    resampledSignal = np.zeros((math.ceil(len(filteredSignal)*(1/delta)))+1)
 
     sIdx = 0.0 #original signal's index
     rsIdx = 0  #resampled signal's index
