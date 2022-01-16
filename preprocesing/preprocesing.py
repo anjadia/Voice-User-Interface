@@ -168,6 +168,7 @@ def VAD(signal, fs, config_file):
 
 def normalize(signal):
     """ Normalize to rms """
+
     return signal / np.sqrt(np.mean(np.power(signal,2)))
 
 
@@ -184,20 +185,20 @@ class Preprocessor():
 
 
     def audio_peprocessing(self, signal, fs):
-        signal = resample(signal, fs, self.config_file["resampling"])
-        signal = normalize(signal)
-        signal = VAD(signal, self.config_file["VAD"])
-        return signal
-
-
-    def audio_peprocessing(self, signal_path):
-    
-        fs, signal = wavfile.read(signal_path)
-
         signal, fs = resample(signal, fs, self.config_file["resampling"])
         signal = normalize(signal)
         signal = VAD(signal, fs, self.config_file["VAD"])
-        return signal
+        return signal, fs
+
+
+    # def audio_peprocessing(self, signal_path):
+    
+    #     fs, signal = wavfile.read(signal_path)
+
+    #     signal, fs = resample(signal, fs, self.config_file["resampling"])
+    #     signal = normalize(signal)
+    #     signal = VAD(signal, fs, self.config_file["VAD"])
+    #     return signal, fs
 
 
 # if __name__ == "__main__":
@@ -215,7 +216,7 @@ class Preprocessor():
 
 #         start = time.time()
 
-#         audio = preprocessor.audio_peprocessing(wav)
+#         audio, fs = preprocessor.audio_peprocessing(wav)
 #         wavfile.write("test.wav", 16000, audio)
 #         end = time.time()
 #         print("Processed in %1.2f sec" % (end - start))

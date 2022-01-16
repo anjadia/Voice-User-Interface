@@ -12,11 +12,13 @@ from ruamel.yaml import YAML
 
 class MFCC():
 
-  def __init__(self, config_file):
+  def __init__(self, config_file, audio_preprocessor):
     self.config_file = config_file
+    self.preprocessor = audio_preprocessor
 
-    if all(item in ["MFCC"] for item in  config_file.keys()):
-      print("******\nLoaded config file.\n******")
+    if "MFCC" in config_file.keys():
+      config_file = self.config_file["MFCC"]
+      print("******\nLoaded MFCC config file.\n******")
       self.frame_len = config_file["frame_len"] if "frame_len" in config_file.keys() else 0.04
       self.hop_len = config_file["hop_len"] if "hop_len" in config_file.keys() else 0.01
       self.FFT_size = config_file["FFT_size"] if "FFT_size" in config_file.keys() else 1024
@@ -56,6 +58,8 @@ class MFCC():
     if len(signal.shape) == 2:
       signal = signal[:,1]
 
+    signal, fs = self.preprocessor.audio_peprocessing(signal, fs)
+
     framed_signal = self.frame_signal(signal, fs)
 
     fft_frames = self.stft(framed_signal)
@@ -69,9 +73,11 @@ class MFCC():
     computed_mfcc = self.DCT(log_mel_stft)
 
     ##TO REMOVE##
-    librosa_mfcc = librosa.feature.mfcc(S = log_mel_stft, n_mfcc=30)
-    assert(np.allclose(librosa_mfcc, computed_mfcc, atol=1))
+    # librosa_mfcc = librosa.feature.mfcc(S = log_mel_stft, n_mfcc=30)
+    # assert(np.allclose(librosa_mfcc, computed_mfcc, atol=1))
     ##---------##
+
+    computed_mfcc = np.nan_to_num(computed_mfcc)
 
     return computed_mfcc
 
@@ -209,7 +215,9 @@ class MFCC():
 
 #         start = time.time()
 
-#         audio_mfcc = mfcc_preprocessor.compute_mfcc(signal_path = wav)
+#         audio_mfcc = mfcc_preprocessor.compute_mfcc(signal_path = wav) 
+#         audio_mfcc = np.concatenate([audio_mfcc, audio_mfcc], axis = 1)
+#         print(audio_mfcc.shape)
 
 #         end = time.time()
 
