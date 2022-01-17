@@ -34,6 +34,6 @@ preprocessing:
 
 tts:
   tools:
-    frameLen : 0.02 # in seconds
-    frameOverlap : 0.5 # [0;1)
+    frameLen : 0.022 # in seconds
+    frameOverlap : 0.3 # [0;1)
     Threshold : 0.35

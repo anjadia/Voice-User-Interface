@@ -67,21 +67,21 @@ def LPCCoefficients(frame, frameLen, window):
     for i in range(p):
         for j in range(p):
             R[i,j] = temp[np.abs(i-j)]
-
+    #print('R', len(R))
     a = -1*np.matmul(lin.inv(R),r.T) #solving the matrix equation
     G = r[0] + sum(a[1:p]*r[1:p])
 
     return a, G
 
 def EncodeLPC(signal, configFile):
-    frameLen = configFile["frameLen"] if "frameLen" in configFile.keys() else 0.02
-    overlap = configFile["frameOverlap"] if "frameOverlap" in configFile.keys() else 0.5
-    fs = configFile["preprocesing"]["targetFrequency"] if "targetFrequency" in configFile["preprocesing"].keys() else 16000
-    Threshold = configFile["Threshold"] if "Threshold" in configFile.keys() else 0.35
+    frameLen = configFile['tts']["frameLen"] if "frameLen" in configFile['tts'].keys() else 0.02
+    overlap = configFile['tts']["frameOverlap"] if "frameOverlap" in configFile['tts'].keys() else 0.5
+    fs = configFile["preprocessing"]["resampling"]["targetFrequency"] if "targetFrequency" in configFile["preprocessing"]["resampling"].keys() else 16000
+    Threshold = configFile['tts']["Threshold"] if "Threshold" in configFile['tts'].keys() else 0.35
     p = 10
 
     frames, frameCount, frameLenSamp = CreateOverlapingFrames(signal, fs, frameLen, overlap)
-
+    #print('frameCount', frameCount)
     window = np.hamming(frameLenSamp)
     voicedFrames = isVoiced(frames, frameCount, frameLenSamp, window, Threshold, fs)
 
@@ -89,9 +89,10 @@ def EncodeLPC(signal, configFile):
     gain = np.zeros(frameCount)
 
     for i in range(frameCount):
+        #if i!=98:
         aCoeff[i,:], gain[i] = LPCCoefficients(frames[i,:], frameLenSamp, window)
 
-    return aCoeff, gain, voicedFrames
+    return aCoeff, gain, voicedFrames, frameLenSamp
 
 #########################################################   tests   ###############################
 # from scipy.io import wavfile
