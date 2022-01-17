@@ -30,7 +30,6 @@ def FrameSynthesis(a, g, frameLen, isVoiced):
     delta[0] = 1
     #print(type(g),type(a),type(noise))
     a = np.array(a)
-    #g = np.array(g)
     a = np.concatenate(([1], a))
     #print(type(g),type(a),type(noise))
     #print(np.shape(g),np.shape(a),np.shape(noise))

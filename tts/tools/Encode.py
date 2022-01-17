@@ -81,17 +81,16 @@ def EncodeLPC(signal, configFile):
     p = 10
 
     frames, frameCount, frameLenSamp = CreateOverlapingFrames(signal, fs, frameLen, overlap)
-    print('frameCount', frameCount)
+    #print('frameCount', frameCount)
     window = np.hamming(frameLenSamp)
     voicedFrames = isVoiced(frames, frameCount, frameLenSamp, window, Threshold, fs)
 
     aCoeff = np.zeros([frameCount, p])
     gain = np.zeros(frameCount)
-    #print(frames[96:])
+
     for i in range(frameCount):
         #if i!=98:
         aCoeff[i,:], gain[i] = LPCCoefficients(frames[i,:], frameLenSamp, window)
-        #print('i ', i)
 
     return aCoeff, gain, voicedFrames, frameLenSamp
 
