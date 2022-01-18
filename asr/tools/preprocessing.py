@@ -197,7 +197,11 @@ class MFCC():
     """
     Compute DCT for given stft
     """
-    return scipy.fftpack.dct(log_mel_stft, axis=-2, type=self.dct_type, norm=self.dct_norm)[..., :self.n_mfcc, :]
+    try:
+      return scipy.fftpack.dct(log_mel_stft, axis=-2, type=self.dct_type, norm=self.dct_norm)[:self.n_mfcc, :]
+    except:
+      return [[]]
+    # return scipy.fftpack.dct(log_mel_stft, axis=-2, type=self.dct_type, norm=self.dct_norm)[..., :self.n_mfcc, :]
 
 
 # if __name__ == "__main__":

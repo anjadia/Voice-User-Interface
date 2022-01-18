@@ -1,14 +1,14 @@
 asr:
   MFCC: 
-    frame_len : 0.04
+    frame_len : 0.02
     hop_len : 0.01
     FFT_size : 1024
     window : "hann"
-    n_mfcc : 30
+    n_mfcc : 20
     dct_type : 2
     dct_norm : "ortho"
   GMM:
-    if_train : True
+    if_train : True  # change to True if you want to train 
     n_components : 8
     covariance_type : "full" 
     tol : 0.001 
@@ -16,9 +16,9 @@ asr:
     max_iter : 100 
     n_init : 10
     init_params : "kmeans"
-    random_state : 1
+    random_state : 10
     warm_start : False 
-    verbose : 2
+    verbose : 0
     verbose_interval : 10
 
 preprocessing:

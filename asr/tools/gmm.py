@@ -16,6 +16,11 @@ from ruamel.yaml import YAML
 import pickle
 from tqdm import tqdm
 
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
+
 
 class GMM():
 
@@ -23,7 +28,7 @@ class GMM():
       self.train = train_set
       self.test = test_set
       self.config_file = config_file
-
+      self.preprocessor = audio_preprocessor
       self.mfcc_preprocessor = MFCC(config_file, audio_preprocessor)
 
       if "GMM" in config_file.keys():
@@ -96,10 +101,10 @@ class GMM():
 
         mfcc_command = np.array([])
         for wavp in command_set:
-
+            
           mfcc_tmp = self.mfcc_preprocessor.compute_mfcc(signal_path = wavp)
 
-          if not np.any(np.isnan(mfcc_tmp)):
+          if not np.any(np.isnan(mfcc_tmp)) and mfcc_tmp.size > 0:
             if len(mfcc_command) > 0:
               mfcc_command = np.concatenate([mfcc_command, mfcc_tmp], axis = 1)
             else:
@@ -129,6 +134,7 @@ class GMM():
 
     def get_prediction(self, path_to_wave):
 
+
       mfcc = self.mfcc_preprocessor.compute_mfcc(signal_path = path_to_wave)
       mfcc = np.nan_to_num(mfcc)
       p_score = []
@@ -142,6 +148,7 @@ class GMM():
         aicc.append(models[gmm_key].aic(mfcc.T))
         p_score.append(models[gmm_key].score(mfcc.T))
 
+      # print(p_score)
       prediction = list(self.gmm_train.keys())[p_score.index(max(p_score))]
       return prediction, max(p_score)
 
@@ -159,11 +166,24 @@ class GMM():
         results["prediction"].append(prediction)
         results["prediction_score"].append(p_score)
         results["ground_truth"].append(row.command)
-        print(results)
-
-        break
-
+      
       pd.DataFrame(results).to_csv(path_to_save, index = False)
+      results =  pd.read_csv(path_to_save)
+
+      # display_labels = self.gmm_train.keys()
+
+      # fig, ax = plt.subplots(figsize=(10, 10))
+      # label_font = {'size':'15'} 
+      # ax.set_xlabel('Predicted labels', fontdict=label_font);
+      # ax.set_ylabel('True labels', fontdict=label_font);
+      # cm = confusion_matrix(results["ground_truth"].values,results["prediction"].values)
+      # disp = ConfusionMatrixDisplay(confusion_matrix=cm,display_labels=display_labels)
+      # disp = disp.plot(ax=ax)
+      # plt.savefig("conf_matrix.png")
+
+      acc = accuracy_score(results["ground_truth"].values,results["prediction"].values)
+
+      print(f"Mean accuracy = {np.mean(acc)}")
 
       return pd.DataFrame(results)
 
