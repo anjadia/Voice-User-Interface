@@ -1,9 +1,8 @@
 import numpy as np
 from scipy.io import wavfile
-from preprocesing import Preprocessor
 from ruamel.yaml import YAML
 #from pathlib import Path
-from preprocesing.preprocesing import Preprocessor
+from preprocesing import Preprocessor
 from tools.Encode import EncodeLPC
 from tools.Synthesis import Synthesis
 

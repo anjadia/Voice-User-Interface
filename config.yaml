@@ -9,16 +9,16 @@ asr:
     dct_norm : "ortho"
   GMM:
     if_train : True
-    n_components : 8 
+    n_components : 8
     covariance_type : "full" 
     tol : 0.001 
     reg_covar : 0.000001
     max_iter : 100 
-    n_init : 10 
-    init_params : "kmeans" 
-    random_state : 10
+    n_init : 10
+    init_params : "kmeans"
+    random_state : 1
     warm_start : False 
-    verbose : 0 
+    verbose : 2
     verbose_interval : 10
 
 preprocessing:
