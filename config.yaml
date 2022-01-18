@@ -8,7 +8,7 @@ asr:
     dct_type : 2
     dct_norm : "ortho"
   GMM:
-    if_train : True  # change to True if you want to train 
+    if_train : False  # change to True if you want to train 
     n_components : 8
     covariance_type : "full" 
     tol : 0.001 
